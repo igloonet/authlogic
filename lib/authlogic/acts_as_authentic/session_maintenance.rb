@@ -120,7 +120,10 @@ module Authlogic
             @_sessions.each do |stale_session|
               next if stale_session.record != self
               stale_session.unauthorized_record = self
-              stale_session.save
+              self.skip_session_maintenance = true
+              result = stale_session.save
+              self.skip_session_maintenance = false
+              result
             end
 
             return true
